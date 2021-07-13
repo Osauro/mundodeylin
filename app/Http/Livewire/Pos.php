@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\Printer;
 use Illuminate\Support\Str;
 
@@ -245,8 +246,11 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        //$nombreImpresora = "TMT20";
-        $nombreImpresora = "POS58";
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+        $nombreImpresora = "TMT20";
+        $conector = new WindowsPrintConnector("smb://$hostname/$nombreImpresora");
+        //$nombreImpresora = "POS58";
         $conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
