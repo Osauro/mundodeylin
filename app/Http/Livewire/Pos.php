@@ -245,8 +245,8 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        $nombreImpresora = "TMT20";
-        //$nombreImpresora = "POS58";
+        //$nombreImpresora = "TMT20";
+        $nombreImpresora = "POS58";
         $conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
