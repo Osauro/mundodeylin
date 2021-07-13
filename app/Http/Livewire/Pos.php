@@ -245,7 +245,7 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        $nombreImpresora = "EPSON TM-T20";
+        $nombreImpresora = "TMT20";
         //$nombreImpresora = "POS58";
         $conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
