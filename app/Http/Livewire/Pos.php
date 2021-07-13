@@ -220,7 +220,7 @@ class Pos extends Component
             $this->nombre = null;
             $this->nit = null;
 
-            $this->imprimirPOS($this->venta);
+            //$this->imprimirPOS($this->venta);
             $this->resetUI();
             $this->emit('message-show', 'Venta completada.');
         }
@@ -245,12 +245,12 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        //$ip = $_SERVER['REMOTE_ADDR'];
         $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-        $nombreImpresora = "POS58";
-        $conector = new WindowsPrintConnector("smb://$hostname/$nombreImpresora");
+        $nombreImpresora = "TMT20";
+        $conector = new WindowsPrintConnector("smb://" . $hostname . "/" . $nombreImpresora);
         //$nombreImpresora = "POS58";
-        $conector = new WindowsPrintConnector($nombreImpresora);
+        //$conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(2, 2);
