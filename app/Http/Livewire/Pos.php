@@ -220,7 +220,7 @@ class Pos extends Component
             $this->nombre = null;
             $this->nit = null;
 
-            $this->imprimirPOS($this->venta);
+            //$this->imprimirPOS($this->venta);
             $this->resetUI();
             $this->emit('message-show', 'Venta completada.');
         }
