@@ -27,6 +27,7 @@ class CreateProductosTable extends Migration
             $table->decimal('precio_por_mayor', 9, 2)->nullable();
             $table->integer('stock')->default(0);
             $table->integer('stock_minimo')->default(0);
+            //$table->bigInteger('ventas')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

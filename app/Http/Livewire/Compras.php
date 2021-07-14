@@ -22,6 +22,7 @@ class Compras extends Component
     public $selected_id;
     public $precio;
     public $cantidad;
+    public $search;
 
     public $componentName;
 
@@ -40,7 +41,12 @@ class Compras extends Component
 
     public function render()
     {
-
+        if (strlen($this->search) > 0) {
+            $productos = Producto::where('nombre', 'LIKE', '%' . $this->search . '%')->paginate($this->paginate);
+            return view('livewire.compras', compact('productos'))
+                ->extends('layouts.main', ['titlePage' => 'Compras', 'activePage' => 'compras'])
+                ->section('content');
+        }
 
         if ($this->comprar == false) {
             if ($this->desde and $this->hasta) {
@@ -51,14 +57,14 @@ class Compras extends Component
             } else {
                 $compras = Compra::orderBy('created_at', 'DESC')->paginate($this->paginate);
             }
-
             return view('livewire.compras', compact('compras'))
             ->extends('layouts.main', ['titlePage' => 'Compras', 'activePage' => 'compras'])
             ->section('content');
-        } else {
-            $productos = Producto::orderBy('nombre','ASC')->get();
+        }
+
+        if ($this->comprar == true) {
             $items = Item::where('compra_id', $this->compra->id)->paginate(3);
-            return view('livewire.compras', compact('items','productos'))
+            return view('livewire.compras', compact('items'))
             ->extends('layouts.main', ['titlePage' => 'Compras', 'activePage' => 'compras'])
             ->section('content');
         }
@@ -83,8 +89,6 @@ class Compras extends Component
 
     public function addProducto($qrcode)
     {
-        $this->resetUI();
-
         $this->producto = Producto::where('codigo', '=', $qrcode)->first();
 
         $item = Item::where('compra_id', $this->compra->id)
@@ -95,7 +99,6 @@ class Compras extends Component
         } else {
             $this->emit('show-modal', true);
         }
-
     }
 
     public function store()
@@ -118,8 +121,8 @@ class Compras extends Component
         $item->precio_unitario  = $this->precio / $this->cantidad;
         $item->precio_total     = $this->precio;
         $item->save();
-        $this->resetUI();
         $this->emit('message-show', 'Producto agregado.');
+        $this->resetUI();
     }
 
     public function edit(Item $item)
@@ -137,20 +140,23 @@ class Compras extends Component
         $item->precio_total = $this->precio;
         $item->precio_unitario = $this->precio / $this->cantidad;
         $item->save();
-        $this->resetUI();
         $this->emit('message-show', 'Item actualizado.');
+        $this->resetUI();
     }
 
     public function destroy(Item $item)
     {
         $item->delete();
+        $this->emit('message-show', 'Item eliminado.');
     }
 
     public function resetUI()
     {
-        $this->selected_id    = 0;
-        $this->precio         = '';
-        $this->cantidad       = '';
+        $this->selected_id    = null;
+        $this->precio         = null;
+        $this->cantidad       = null;
+        $this->search         = null;
+        $this->producto       = null;
     }
 
     public function completar()

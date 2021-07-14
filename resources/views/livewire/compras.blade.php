@@ -57,11 +57,18 @@
                             </div>
                         </div>
                     </div>
+                    @include('commons.search')
                 @endif
             </div>
             @if ($comprar == false)
                 @include('livewire.comprasList')
-            @else
+            @endif
+
+            @if (strlen($search) > 0)
+                @include('livewire.comprasProductos')
+            @endif
+
+            @if ($comprar == true and strlen($search) == 0)
                 @include('livewire.comprasItems')
             @endif
         </div>

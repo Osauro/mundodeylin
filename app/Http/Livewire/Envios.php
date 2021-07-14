@@ -24,6 +24,7 @@ class Envios extends Component
     public $enviar = false;
     public $selected_id;
     public $cantidad;
+    public $search;
 
     public $componentName;
 
@@ -42,6 +43,13 @@ class Envios extends Component
 
     public function render()
     {
+        if(strlen($this->search) > 0) {
+            $productos = Producto::where('nombre', 'LIKE', '%' . $this->search . '%')->paginate($this->paginate);
+            return view('livewire.envios', compact('productos'))
+            ->extends('layouts.main', ['titlePage' => 'Envios', 'activePage' => 'envios'])
+            ->section('content');
+        }
+
         if ($this->enviar == false) {
             if ($this->desde and $this->hasta) {
                 $envios = Envio::whereDate('created_at', '>=', $this->desde)
@@ -58,7 +66,9 @@ class Envios extends Component
             ->extends('layouts.main', ['titlePage' => 'Envios', 'activePage' => 'envios'])
             ->section('content');
 
-        } else {
+        }
+
+        if ($this->enviar == true) {
             $items = Item::where('envio_id', $this->envio->id)->paginate(3);
             return view('livewire.envios', compact('items'))
             ->extends('layouts.main', ['titlePage' => 'Envios', 'activePage' => 'envios'])
@@ -148,12 +158,16 @@ class Envios extends Component
     public function destroy(Item $item)
     {
         $item->delete();
+        $this->emit('message-show', 'Item eliminado.');
     }
 
     public function resetUI()
     {
-        $this->selected_id    = 0;
-        $this->cantidad       = '';
+        $this->selected_id    = null;
+        $this->cantidad       = null;
+        $this->search         = null;
+        $this->producto       = null;
+
     }
 
     public function completar()
@@ -190,6 +204,7 @@ class Envios extends Component
         $this->envio->estado = 'Cancelado';
         $this->envio->save();
         $this->enviar = false;
+        $this->emit('message-show', 'Envio cancelado.')
     }
 
     public function imprimirPDF(Envio $envio)

@@ -65,11 +65,18 @@
                             </div>
                         </div>
                     </div>
+                    @include('commons.search')
                 @endif
             </div>
             @if ($enviar == false)
                 @include('livewire.enviosList')
-            @else
+            @endif
+
+            @if (strlen($search) > 0)
+                @include('livewire.enviosProductos')
+            @endif
+
+            @if ($enviar == true and strlen($search) == 0)
                 @include('livewire.enviosItems')
             @endif
         </div>
