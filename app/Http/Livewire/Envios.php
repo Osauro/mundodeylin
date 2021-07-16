@@ -204,7 +204,7 @@ class Envios extends Component
         $this->envio->estado = 'Cancelado';
         $this->envio->save();
         $this->enviar = false;
-        $this->emit('message-show', 'Envio cancelado.')
+        $this->emit('message-show', 'Envio cancelado.');
     }
 
     public function imprimirPDF(Envio $envio)

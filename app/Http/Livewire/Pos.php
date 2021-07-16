@@ -249,8 +249,6 @@ class Pos extends Component
         $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
         $nombreImpresora = "TMT20";
         $conector = new WindowsPrintConnector("smb://" . $hostname . "/" . $nombreImpresora);
-        //$nombreImpresora = "POS58";
-        //$conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(2, 2);

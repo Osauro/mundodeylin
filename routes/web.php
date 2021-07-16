@@ -13,11 +13,15 @@ use App\Http\Livewire\Tiendas;
 use App\Http\Livewire\Usuarios;
 use App\Http\Livewire\Ventas;
 use App\Http\Livewire\VerMovimientos;
+use App\Http\Livewire\Welcome;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/foo', function () {
+    Artisan::call('storage:link');
 });
+
+Route::get('/', Welcome::class)->name('welcome');
 
 Route::middleware(['auth:sanctum', 'verified', 'admin'])->get('/dashboard', function () {
     return view('dashboard');
