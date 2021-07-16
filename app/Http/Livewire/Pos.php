@@ -245,10 +245,10 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        //$ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR'];
         $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
         $nombreImpresora = "TMT20";
-        $conector = new WindowsPrintConnector("smb://" . $hostname . "/" . $nombreImpresora);
+        $conector = new WindowsPrintConnector("smb://" . $ip . "/" . $nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(2, 2);
