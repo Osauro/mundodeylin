@@ -94,6 +94,7 @@
             impresora.feed(2);
             impresora.setFont('B');
             impresora.write("www.dieguitosoft.com\n");
+            impresora.write("___SOFTWARE A MEDIDA PARA TU NEGOCIO___\n");
             impresora.write("CEL: 73010688\n");
             impresora.cut();
             impresora.imprimirEnImpresora(nombreImpresora);
