@@ -50,7 +50,7 @@ class Pos extends Component
         $this->tienda = Auth()->user()->tienda;
 
         if (is_null($this->tienda)) {
-            abort(401);
+            return redirect()->to(route('dashboard'));
         }
     }
 
@@ -245,10 +245,37 @@ class Pos extends Component
 
     public function imprimirPOS(Venta $venta)
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+        $cabecera = '';
+        $cabecera .= Str::padRight("FECHA:", 9, " ") . Carbon::parse($venta->created_at)->format('d/m/Y H:i:s') . "\n";
+        $cabecera .= Str::padRight("CLIENTE:", 9, " ") . $venta->cliente->nombre . "\n";
+        $cabecera .= Str::padRight("NIT/CI:", 9, " ") . $venta->cliente->nit . "\n";
+
+        $productos = '';
+        foreach ($venta->items as $item) {
+            $cantidad = $item->cantidad . " (" . $item->producto->unidad_medida . ") ";
+            $producto = Str::of(Str::padRight($cantidad . $item->producto->nombre, 100, '.'))->limit(35);
+            $precio = Str::padLeft($item->precio_total, 10, '.');
+            $productos .= $producto . $precio . "\n";
+        }
+
+        $total = '';
+        $total .= "____________________\n";
+        $total .= Str::padRight("TOTAL:", 12, " ");
+        $total .= Str::padLeft(number_format($venta->items->sum('precio_total'), 2, '.', ''), 7, ' ') . "\n";
+
+        $pagado = '';
+        $pagado .= Str::padRight("EFECTIVO:", 12, " ");
+        $pagado .= Str::padLeft(number_format($this->efectivo, 2, '.', ''), 7, ' ') . "\n";
+        $pagado .= Str::padRight("CAMBIO:", 12, " ");
+        $pagado .= Str::padLeft(number_format($this->cambio, 2, '.', ''), 7, ' ') . "\n";
+
+        $this->emit('imprimir', ['cabecera' => $cabecera, 'productos' => $productos, 'total' => $total, 'pagado' => $pagado]);
+
+        /*
+        //$ip = $_SERVER['REMOTE_ADDR'];
+        //$hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
         $nombreImpresora = "TMT20";
-        $conector = new WindowsPrintConnector("smb://143.198.191.255/" . $nombreImpresora);
+        $conector = new WindowsPrintConnector($nombreImpresora);
         $impresora = new Printer($conector);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(2, 2);
@@ -292,5 +319,6 @@ class Pos extends Component
         $impresora->feed(5);
         $impresora->cut();
         $impresora->close();
+        */
     }
 }

@@ -44,6 +44,7 @@
             <button class="btn btn-lg btn-default w-25" wire:click="addMoney(100.00)">100.00</button>
             <button class="btn btn-lg btn-default w-25" wire:click="addMoney(200.00)">200.00</button>
             <button class="btn btn-lg btn-default w-50" wire:click="resetUI()">BORRAR</button>
+            <button class="btn btn-lg btn-default w-50" wire:click="imprimirPOS(17)">IMP</button>
         </div>
     </div>
 </div>
