@@ -32,6 +32,7 @@
         window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show');
         });
+
         window.livewire.on('message-show', msg => {
             $('#theModal').modal('hide');
             Swal.fire({
@@ -55,7 +56,7 @@
         });
 
         window.livewire.on('imprimir', msg => {
-            let nombreImpresora = "TMT20",
+            let nombreImpresora = "TMT20";
             let impresora = new Impresora();
             impresora.cut();
             // CORTA LA PARTE DE LA CABECERA
