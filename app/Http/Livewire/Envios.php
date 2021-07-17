@@ -203,7 +203,7 @@ class Envios extends Component
                 $articulo->save();
             }
 
-            $cantidad = Str::padLeft($item->cantidad, 4, ' ') . " (" . Str::limit($item->producto->unidad_medida, '3') . ") ";
+            $cantidad = Str::padLeft($item->cantidad, 4, '0') . " (" . Str::limit($item->producto->unidad_medida, '3') . ") ";
             $producto = Str::of($cantidad . $item->producto->nombre)->limit(45);
             $productos .= $producto . "\n";
         }
