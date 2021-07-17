@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Envios extends Component
 {
@@ -167,11 +169,18 @@ class Envios extends Component
         $this->cantidad       = null;
         $this->search         = null;
         $this->producto       = null;
-
     }
 
     public function completar()
     {
+        $cabecera = '';
+        $cabecera .= Str::padRight("FECHA:", 12, " ") . Carbon::parse($this->envio->created_at)->format('d/m/Y H:i:s') . "\n";
+        $cabecera .= Str::padRight("TIENDA:", 12, " ") . $this->envio->tienda->nombre . "\n";
+        $cabecera .= Str::padRight("DIRECCION:", 12, " ") . $this->envio->tienda->direccion . "\n";
+        $cabecera .= Str::padRight("ENCARGADO:", 12, " ") . $this->envio->user->name . "\n";
+
+        $productos = '';
+
         foreach ($this->envio->items as $item) {
 
             $producto = Producto::find($item->producto_id);
@@ -193,10 +202,17 @@ class Envios extends Component
                 $articulo->cantidad = $item->cantidad;
                 $articulo->save();
             }
+
+            $cantidad = Str::padLeft($item->cantidad, 4, ' ') . " (" . Str::limit($item->producto->unidad_medida, '3') . ") ";
+            $producto = Str::of($cantidad . $item->producto->nombre)->limit(45);
+            $productos .= $producto . "\n";
         }
         $this->envio->estado = 'Completado';
         $this->envio->save();
-        return redirect()->to(route('envios'));
+        $this->emit('imprimir', ['cabecera' => $cabecera, 'productos' => $productos]);
+        $this->enviar = false;
+        $this->envio = null;
+        $this->tienda = null;
     }
 
     public function cancelar()
@@ -204,6 +220,8 @@ class Envios extends Component
         $this->envio->estado = 'Cancelado';
         $this->envio->save();
         $this->enviar = false;
+        $this->envio = null;
+        $this->tienda = null;
         $this->emit('message-show', 'Envio cancelado.');
     }
 

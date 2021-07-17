@@ -252,7 +252,7 @@ class Pos extends Component
 
         $productos = '';
         foreach ($venta->items as $item) {
-            $cantidad = $item->cantidad . " (" . $item->producto->unidad_medida . ") ";
+            $cantidad = Str::padLeft($item->cantidad, 9, ' ') . " (" . Str::limit($item->producto->unidad_medida, '3') . ") ";
             $producto = Str::of(Str::padRight($cantidad . $item->producto->nombre, 100, '.'))->limit(35);
             $precio = Str::padLeft($item->precio_total, 10, '.');
             $productos .= $producto . $precio . "\n";

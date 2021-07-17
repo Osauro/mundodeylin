@@ -89,6 +89,7 @@
 </div>
 @push('js')
 <script src="{{ asset('material') }}/js/onscan.min.js"></script>
+<script src="https://parzibyte.github.io/plugin-ticket-js/Impresora.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         window.livewire.on('show-modal', msg => {
@@ -143,6 +144,75 @@
                 timer: 1500
             })
         }
+
+        window.livewire.on('imprimir', msg => {
+            let nombreImpresora = "TMT20";
+            let impresora = new Impresora();
+            impresora.cut();
+            // CORTA LA PARTE DE LA CABECERA
+            // setFont A - B
+            // setEmphasize 0 - 1
+            // setAlign left - center - right
+            impresora.setFontSize(2, 2);
+            impresora.setEmphasize(1);
+            impresora.write("MUNDO DEYLIN\n");
+
+            impresora.setFontSize(1, 1);
+            impresora.feed(1);
+            impresora.write("E N V I O\n");
+            impresora.feed(1);
+
+            impresora.setAlign('left');
+            impresora.write(msg['cabecera']);
+
+            impresora.feed(1);
+            impresora.setAlign("center");
+            impresora.write("P R O D U C T O S\n");
+            impresora.feed(1);
+
+            impresora.setAlign('left');
+            impresora.write(msg['productos']);
+
+            impresora.feed(2);
+            impresora.setFont('B');
+            impresora.setAlign('center');
+            impresora.write("www.dieguitosoft.com\n");
+            impresora.write("___ SOFTWARE A MEDIDA PARA TU NEGOCIO ___\n");
+            impresora.write("CEL: 73010688\n");
+            impresora.feed(3);
+            impresora.cut();
+
+            impresora.setFont('A');
+            impresora.setFontSize(2, 2);
+            impresora.setEmphasize(1);
+            impresora.write("MUNDO DEYLIN\n");
+
+            impresora.setFontSize(1, 1);
+            impresora.feed(1);
+            impresora.write("E N V I O\n");
+            impresora.write("COPIA\n");
+            impresora.feed(1);
+
+            impresora.setAlign('left');
+            impresora.write(msg['cabecera']);
+
+            impresora.feed(1);
+            impresora.setAlign("center");
+            impresora.write("P R O D U C T O S\n");
+            impresora.feed(1);
+
+            impresora.setAlign('left');
+            impresora.write(msg['productos']);
+
+            impresora.feed(2);
+            impresora.setFont('B');
+            impresora.setAlign('center');
+            impresora.write("www.dieguitosoft.com\n");
+            impresora.write("___ SOFTWARE A MEDIDA PARA TU NEGOCIO ___\n");
+            impresora.write("CEL: 73010688\n");
+            impresora.cut();
+            impresora.imprimirEnImpresora(nombreImpresora);
+        });
     })
 </script>
 @endpush
