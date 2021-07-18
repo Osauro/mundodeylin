@@ -9,6 +9,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Productos extends Component
 {
@@ -123,6 +124,7 @@ class Productos extends Component
             $customFileName = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/productos', $customFileName);
             $producto->image = 'productos/' . $customFileName;
+            Image::make('storage/' . $producto->image)->resize(512, 512)->save('storage/' . $producto->image);
         }
         $producto->save();
 
@@ -206,6 +208,7 @@ class Productos extends Component
             $customFileName = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/productos', $customFileName);
             $producto->image = 'productos/' . $customFileName;
+            Image::make('storage/' . $producto->image)->resize(512, 512)->save('storage/' . $producto->image);
         }
 
         $producto->save();

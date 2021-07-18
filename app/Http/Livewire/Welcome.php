@@ -8,34 +8,26 @@ use Livewire\Component;
 
 class Welcome extends Component
 {
-    public $activePage;
-    public $title;
-    public $categoria;
 
-    public function mount()
-    {
-        if (request()->categoria) {
-            $this->categoria = Categoria::where('slug', request()->categoria)->first();
-            $this->title = $this->categoria->nombre;
-        }
-    }
+    public $activePage;
+    public $title = null;
+    private $paginate = 8;
+    protected $productos;
 
     public function render()
     {
+        if (request('categoria')) {
+            $this->productos = Producto::where('categoria_id', request('categoria'))->simplePaginate($this->paginate);
+        }
+
+        if (is_null($this->productos)) {
+            $this->productos = Producto::orderBy('nombre', 'ASC')->simplePaginate($this->paginate);
+        }
 
         $categorias = Categoria::orderBy('nombre', 'ASC')->get();
-
-        if ($this->categoria) {
-            $productos = Producto::where('categoria_id', '=', $this->categoria->id)->paginate();
-            return view('livewire.welcome', compact('productos'))
-            ->extends('layouts.welcome', ['titlePage' => 'Bienvenido', 'categorias' => $categorias, 'productos' => $productos, 'activePage' => $this->categoria->slug])
-            ->section('content');
-        } else {
-            $productos = Producto::orderBy('nombre', 'ASC')->paginate();
-            return view('livewire.welcome', compact('productos'))
-            ->extends('layouts.welcome', ['titlePage' => 'Bienvenido', 'categorias' => $categorias, 'productos' => $productos, 'activePage' => ''])
-            ->section('content');
-        }
+        return view('livewire.welcome', ['productos' => $this->productos, 'categorias' => $categorias])
+        ->extends('layouts.welcome')
+        ->section('content');
 
     }
 }

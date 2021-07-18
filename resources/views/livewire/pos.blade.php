@@ -93,9 +93,10 @@
             impresora.write("P O R   S U   C O M P R A\n");
             impresora.feed(2);
             impresora.setFont('B');
+            impresora.setAlign("center");
             impresora.write("www.dieguitosoft.com\n");
-            impresora.write("___ SOFTWARE A MEDIDA PARA TU NEGOCIO ___\n");
             impresora.write("CEL: 73010688\n");
+            impresora.setFont('A');
             impresora.cut();
             impresora.imprimirEnImpresora(nombreImpresora);
         });
